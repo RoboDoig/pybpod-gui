@@ -14,8 +14,10 @@ Rectangle {
     border.width: 4
     property var stateID
     property var drawingCanvas
-    property var parentRoot
     property alias stateNameText: textInput.text
+    property alias timerText: textInput1.text
+
+    signal selectRequest(var ID)
 
     function select() {
         rectangle.border.color = "#979797"
@@ -36,10 +38,7 @@ Rectangle {
         onReleased: iface.on_released(parent)
         propagateComposedEvents: true
         onClicked: {
-            // TODO - should replace these parent calls with signals
-            parentRoot.deselectAll()
-            parentRoot.populateTransitions()
-            select()
+            rectangle.selectRequest(rectangle.stateID)
         }
     }
 

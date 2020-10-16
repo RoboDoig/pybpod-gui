@@ -17,9 +17,14 @@ ApplicationWindow {
 
     function deselectAll() {
         for (var state in root.statesDict) {
-            iface.printer(state)
             root.statesDict[state].deselect()
         }
+    }
+
+    function stateSelected(ID) {
+        deselectAll()
+        iface.printer("stateSelected")
+        root.statesDict[ID].select()
     }
 
     function populateTransitions() {
@@ -66,9 +71,10 @@ ApplicationWindow {
                         root.statesDict[root.stateID] = Qt.createComponent("CustomDragBox.qml").createObject(designPanel)
                         iface.create_new(root.statesDict)
 
+                        root.statesDict[root.stateID].selectRequest.connect(stateSelected)
                         root.statesDict[root.stateID].drawingCanvas = drawingCanvas
                         root.statesDict[root.stateID].stateID = root.stateID
-                        root.statesDict[root.stateID].parentRoot = root
+                        //root.statesDict[root.stateID].parentRoot = root
                         root.statesDict[root.stateID].stateNameText = "state" + root.stateID
                         root.stateID += 1
                     }
