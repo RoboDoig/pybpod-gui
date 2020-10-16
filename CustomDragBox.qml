@@ -10,16 +10,37 @@ Rectangle {
     height: 100
     color: "#fdfdfd"
     radius: 0
+    border.color: "#000000"
     border.width: 4
     property var stateID
     property var drawingCanvas
+    property var parentRoot
     property alias stateNameText: textInput.text
 
+    function select() {
+        rectangle.border.color = "#979797"
+        outNode.color = "#979797"
+        inNode.color = "#979797"
+    }
+
+    function deselect() {
+        rectangle.border.color = "#000000"
+        outNode.color = "#000000"
+        inNode.color = "#000000"
+    }
+
     MouseArea {
+        id: controlMouseArea
         anchors.fill: parent
         drag.target: rectangle
         onReleased: iface.on_released(parent)
         propagateComposedEvents: true
+        onClicked: {
+            // TODO - should replace these parent calls with signals
+            parentRoot.deselectAll()
+            parentRoot.populateTransitions()
+            select()
+        }
     }
 
     ProgressBar {
@@ -28,7 +49,7 @@ Rectangle {
         y: 76
         width: 84
         height: 24
-        value: 0.5
+        value: 0.05
     }
 
     TextInput {
@@ -63,8 +84,8 @@ Rectangle {
 //                    outNode.selected = false
 //                } else {
 //                    outNode.color = "#ff0000"
-//                    outNode.selected = true
-//                }
+                //                    outNode.selected = true
+                //                }
             }
         }
     }
@@ -76,6 +97,18 @@ Rectangle {
         width: 9
         height: 9
         color: "#000000"
+    }
+
+    TextInput {
+        id: textInput1
+        x: 10
+        y: 34
+        width: 80
+        height: 20
+        text: qsTr("0")
+        font.pixelSize: 12
+        horizontalAlignment: Text.AlignHCenter
+        font.family: "Courier"
     }
 }
 /*##^##

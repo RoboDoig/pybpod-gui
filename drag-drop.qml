@@ -8,53 +8,203 @@ ApplicationWindow {
     id: root
     visible: true
     objectName: "applicationWindow"
-    width: 640
-    height: 480
-    title: qsTr("drag-drop")
+    width: 1020
+    height: 640
+    title: qsTr("pybpod-design-gui")
     property var statesDict: ({})
     property var stateID: 0
     property var selectedOutNode
 
-    MouseArea {
-        id: mainMouseArea
+    function deselectAll() {
+        for (var state in root.statesDict) {
+            iface.printer(state)
+            root.statesDict[state].deselect()
+        }
+    }
+
+    function populateTransitions() {
+
+    }
+
+    function testFun() {
+        iface.printer("testFun")
+    }
+
+    GridLayout {
+        id: mainGridLayout
         anchors.fill: parent
-        onClicked: {
-            //drawingCanvas.requestPaint()
+        rows: 1
+        columns: 5
+
+        Rectangle {
+            id: controlPanel
+            width: 150
+            height: 640
+            color: "#ffffff"
+            border.width: 3
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            GridLayout {
+                id: controlPanelGridLayout
+                anchors.fill: parent
+                anchors.rightMargin: 10
+                anchors.leftMargin: 10
+                anchors.bottomMargin: 480
+                anchors.topMargin: 30
+                rows: 5
+                columns: 1
+
+                Button {
+                    id: addNewStateButton
+                    objectName: "button"
+                    text: qsTr("New State")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                    checked: false
+                    font.family: "Courier"
+                    onClicked: {
+                        root.statesDict[root.stateID] = Qt.createComponent("CustomDragBox.qml").createObject(designPanel)
+                        iface.create_new(root.statesDict)
+
+                        root.statesDict[root.stateID].drawingCanvas = drawingCanvas
+                        root.statesDict[root.stateID].stateID = root.stateID
+                        root.statesDict[root.stateID].parentRoot = root
+                        root.statesDict[root.stateID].stateNameText = "state" + root.stateID
+                        root.stateID += 1
+                    }
+                }
+
+                Button {
+                    id: resetButton
+                    text: qsTr("Reset")
+                    checked: false
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                    objectName: "button"
+                    font.family: "Courier"
+                    onClicked: {
+                        //root.statesDict[0].deselect()
+                        for (var state in root.statesDict) {
+                            iface.printer(state)
+                            root.statesDict[state].deselect()
+                        }
+                    }
+                }
+            }
+
         }
 
-        hoverEnabled: true
-    }
+        Rectangle {
+            id: designPanel
+            width: 708
+            height: 640
+            color: "#ffffff"
+            border.width: 3
+            Layout.columnSpan: 3
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
-    Canvas {
-        id: drawingCanvas
-        anchors.fill: parent
-        onPaint:
-        {
-//            var ctx = drawingCanvas.getContext('2d')
-//            ctx.lineWidth = 2
-//            ctx.beginPath()
-//            ctx.moveTo(drawingCanvas.width/2, drawingCanvas.height/2)
-//            ctx.lineTo(mainMouseArea.mouseX, mainMouseArea.mouseY)
-//            //ctx.closePath()
-//            ctx.stroke()
+            MouseArea {
+                id: mainMouseArea
+                anchors.fill: parent
+                onClicked: {
+                    //drawingCanvas.requestPaint()
+                }
+
+                hoverEnabled: true
+            }
+
+            Canvas {
+                id: drawingCanvas
+                anchors.fill: parent
+                onPaint:
+                {
+                    //            var ctx = drawingCanvas.getContext('2d')
+                    //            ctx.lineWidth = 2
+                    //            ctx.beginPath()
+                    //            ctx.moveTo(drawingCanvas.width/2, drawingCanvas.height/2)
+                    //            ctx.lineTo(mainMouseArea.mouseX, mainMouseArea.mouseY)
+                    //            //ctx.closePath()
+                    //            ctx.stroke()
+                }
+            }
         }
-    }
 
-    Button {
-        id: button
-        objectName: "button"
-        text: qsTr("Create New")
-        property var tempState
-        x: 0
-        y: 0
-        onClicked: {
-            root.statesDict[root.stateID] = Qt.createComponent("CustomDragBox.qml").createObject(root)
-            iface.create_new(root.statesDict)
+        Rectangle {
+            id: infoPanel
+            width: 150
+            height: 640
+            color: "#ffffff"
+            radius: 0
+            border.width: 3
+            Layout.preferredWidth: 250
+            Layout.columnSpan: 1
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
-            root.statesDict[root.stateID].drawingCanvas = drawingCanvas
-            root.statesDict[root.stateID].stateID = root.stateID
-            root.statesDict[root.stateID].stateNameText = "state" + root.stateID
-            root.stateID += 1
+            GridLayout {
+                id: gridLayout1
+                anchors.fill: parent
+                flow: GridLayout.TopToBottom
+                rows: 20
+                columns: 1
+                columnSpacing: 1
+                rowSpacing: 1
+                anchors.rightMargin: 20
+                anchors.leftMargin: 20
+                anchors.bottomMargin: 160
+                anchors.topMargin: 30
+            }
+
+            GridLayout {
+                id: gridLayout
+                anchors.fill: parent
+                anchors.rightMargin: 20
+                anchors.leftMargin: 20
+                anchors.bottomMargin: 20
+                anchors.topMargin: 497
+
+                Button {
+                    id: addTransitionButton
+                    text: qsTr("+")
+                    font.family: "Courier"
+                    Layout.preferredHeight: 20
+                    Layout.preferredWidth: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: false
+                    Layout.fillWidth: true
+
+                    onClicked: {
+                        var transitionEntry = Qt.createComponent("TransitionEntry.qml").createObject(gridLayout1)
+                        iface.printer(transitionEntry)
+                        transitionEntry.textChanged.connect(root.testFun)
+                    }
+                }
+
+                Button {
+                    id: resetTransitionButton
+                    text: qsTr("-")
+                    font.family: "Courier"
+                    Layout.preferredHeight: 20
+                    Layout.preferredWidth: 10
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: false
+                    Layout.fillWidth: true
+
+                    onClicked: {
+                        gridLayout1.children[gridLayout1.children.length-1].destroy()
+                    }
+                }
+            }
         }
+
     }
+
+
+
 }
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.75}D{i:3}D{i:2}D{i:10}D{i:11}D{i:1}
+}
+##^##*/
