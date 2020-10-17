@@ -14,8 +14,8 @@ Rectangle {
     border.width: 4
     property var stateID
     property var drawingCanvas
-    property alias stateNameText: textInput.text
-    property alias timerText: textInput1.text
+    property alias stateNameText: stateNameTextInput.text
+    property alias timerText: timerTextInput.text
 
     signal selectRequest(var ID)
 
@@ -52,7 +52,7 @@ Rectangle {
     }
 
     TextInput {
-        id: textInput
+        id: stateNameTextInput
         x: 10
         y: 8
         width: 80
@@ -99,7 +99,7 @@ Rectangle {
     }
 
     TextInput {
-        id: textInput1
+        id: timerTextInput
         x: 10
         y: 34
         width: 80

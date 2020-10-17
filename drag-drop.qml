@@ -12,8 +12,16 @@ ApplicationWindow {
     height: 640
     title: qsTr("pybpod-design-gui")
     property var statesDict: ({})
-    property var stateID: 0
     property var selectedOutNode
+
+    function stateCreated(name, id) {
+        root.statesDict[id] = Qt.createComponent("CustomDragBox.qml").createObject(designPanel)
+        root.statesDict[id].stateNameText = name
+        root.statesDict[id].stateID = id
+
+        root.statesDict[id].selectRequest.connect(stateSelected)
+        root.statesDict[id].drawingCanvas = drawingCanvas
+    }
 
     function deselectAll() {
         for (var state in root.statesDict) {
@@ -23,7 +31,6 @@ ApplicationWindow {
 
     function stateSelected(ID) {
         deselectAll()
-        iface.printer("stateSelected")
         root.statesDict[ID].select()
     }
 
@@ -68,15 +75,7 @@ ApplicationWindow {
                     checked: false
                     font.family: "Courier"
                     onClicked: {
-                        root.statesDict[root.stateID] = Qt.createComponent("CustomDragBox.qml").createObject(designPanel)
-                        iface.create_new(root.statesDict)
-
-                        root.statesDict[root.stateID].selectRequest.connect(stateSelected)
-                        root.statesDict[root.stateID].drawingCanvas = drawingCanvas
-                        root.statesDict[root.stateID].stateID = root.stateID
-                        //root.statesDict[root.stateID].parentRoot = root
-                        root.statesDict[root.stateID].stateNameText = "state" + root.stateID
-                        root.stateID += 1
+                        iface.create_new_state()
                     }
                 }
 

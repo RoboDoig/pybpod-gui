@@ -16,14 +16,14 @@ if __name__ == '__main__':
 
     appEngine.load(QUrl('drag-drop.qml'))
 
-    win = appEngine.rootObjects()[0]
+    root = appEngine.rootObjects()[0]
 
     # Register Python classes with qml
-    interface = Interface(app, context, win, appEngine)
+    interface = Interface(app, context, root, appEngine)
 
     context.setContextProperty('iface', interface)
 
-    win.show()
+    root.show()
     try:
         apcode = app.exec_()
     except:
