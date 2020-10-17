@@ -8,3 +8,5 @@ venv/Lib/site-packages/_pytest/
 venv/Lib/site-packages/
 
 venv/
+
+*.autosave
