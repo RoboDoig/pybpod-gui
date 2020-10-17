@@ -53,16 +53,17 @@ ApplicationWindow {
         }
     }
 
-    function addTransition(condition, state) {
+    function addTransition(condition, state, idx) {
         var transitionEntry = Qt.createComponent("TransitionEntry.qml").createObject(gridLayout1)
         transitionEntry.conditionText = condition
         transitionEntry.stateText = state
+        transitionEntry.idx = idx
 
-        transitionEntry.textChanged.connect(root.testFun)
+        transitionEntry.textChanged.connect(root.updateTransition)
     }
 
-    function testFun() {
-        iface.printer("testFun")
+    function updateTransition(condition, state, idx) {
+        iface.update_transition(condition, state, idx, root.selectedID)
     }
 
     GridLayout {
@@ -219,7 +220,9 @@ ApplicationWindow {
                     Layout.fillWidth: true
 
                     onClicked: {
-                        gridLayout1.children[gridLayout1.children.length-1].destroy()
+                        if (gridLayout1.children.length > 0) {
+                            iface.remove_transition(gridLayout1.children.length-1, root.selectedID)
+                        }
                     }
                 }
             }

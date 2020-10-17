@@ -17,8 +17,9 @@ Rectangle {
 
     property alias conditionText: textInput.text
     property alias stateText: textInput1.text
+    property var idx: -1
 
-    signal textChanged()
+    signal textChanged(var conditionText, var stateText, var idx)
 
     GridLayout {
         id: gridLayout2
@@ -40,7 +41,7 @@ Rectangle {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             onAccepted: {
-                transitionDefinition.textChanged()
+                transitionDefinition.textChanged(textInput.text, textInput1.text, transitionDefinition.idx)
             }
         }
 
@@ -59,7 +60,7 @@ Rectangle {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             onAccepted: {
-                transitionDefinition.textChanged()
+                transitionDefinition.textChanged(textInput.text, textInput1.text, transitionDefinition.idx)
             }
         }
     }

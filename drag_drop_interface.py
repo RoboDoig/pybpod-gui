@@ -29,7 +29,6 @@ class Interface(QObject):
     @pyqtSlot(int, str, float)
     def update_state(self, state_id, state_name, state_timer):
         self.state_model.update_state(state_id, state_name, state_timer)
-        print("update state")
 
     @pyqtSlot(int)
     def state_selected(self, state_id):
@@ -43,10 +42,19 @@ class Interface(QObject):
         # tell the GUI to show the transition for this state
         self.show_transitions(state_id)
 
+    @pyqtSlot(str, str, int, int)
+    def update_transition(self, condition, state, transition_idx, state_idx):
+        self.state_model.states[state_idx].transitions[transition_idx] = (condition, state)
+
+    @pyqtSlot(int, int)
+    def remove_transition(self, transition_idx, state_idx):
+        self.state_model.states[state_idx].transitions.pop(transition_idx)
+        self.show_transitions(state_idx)
+
     def show_transitions(self, state_id):
         self.root.clearTransitions()
-        for transition in self.state_model.states[state_id].transitions:
-            self.root.addTransition(transition[0], transition[1])
+        for t, transition in enumerate(self.state_model.states[state_id].transitions):
+            self.root.addTransition(transition[0], transition[1], t)
 
     @pyqtSlot(QVariant)
     def printer(self, obj):
