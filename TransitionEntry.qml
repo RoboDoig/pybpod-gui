@@ -15,6 +15,9 @@ Rectangle {
     Layout.preferredHeight: 40
     Layout.fillWidth: true
 
+    property alias conditionText: textInput.text
+    property alias stateText: textInput1.text
+
     signal textChanged()
 
     GridLayout {

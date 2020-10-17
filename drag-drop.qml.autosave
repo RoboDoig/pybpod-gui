@@ -47,7 +47,7 @@ ApplicationWindow {
     }
 
     function clearTransitions() {
-
+        
     }
 
     function addTransition(condition, state) {
