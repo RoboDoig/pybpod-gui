@@ -33,7 +33,7 @@ class Interface(QObject):
 
     @pyqtSlot(int)
     def state_selected(self, state_id):
-        print("state selected: ", self.state_model.states[state_id])
+        self.show_transitions(state_id)
 
     @pyqtSlot(int)
     def add_transition(self, state_id):
@@ -41,6 +41,10 @@ class Interface(QObject):
         self.state_model.add_transition(state_id)
 
         # tell the GUI to show the transition for this state
+        self.show_transitions(state_id)
+
+    def show_transitions(self, state_id):
+        self.root.clearTransitions()
         for transition in self.state_model.states[state_id].transitions:
             self.root.addTransition(transition[0], transition[1])
 

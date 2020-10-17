@@ -47,7 +47,10 @@ ApplicationWindow {
     }
 
     function clearTransitions() {
-
+        for (var i = gridLayout1.children.length; i > 0; i--) {
+            iface.printer(i)
+            gridLayout1.children[i-1].destroy()
+        }
     }
 
     function addTransition(condition, state) {
@@ -108,9 +111,9 @@ ApplicationWindow {
                     font.family: "Courier"
                     onClicked: {
                         for (var state in root.statesDict) {
-                            iface.printer(state)
                             root.statesDict[state].deselect()
                             selectedID = -1
+                            root.clearTransitions()
                         }
                     }
                 }
