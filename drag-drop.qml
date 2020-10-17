@@ -14,12 +14,16 @@ ApplicationWindow {
     property var statesDict: ({})
     property var selectedOutNode
 
-    function stateCreated(name, id) {
+    function stateCreated(name, timer, id) {
         root.statesDict[id] = Qt.createComponent("CustomDragBox.qml").createObject(designPanel)
         root.statesDict[id].stateNameText = name
+        root.statesDict[id].timerText = timer
         root.statesDict[id].stateID = id
 
+        // Function hooks
         root.statesDict[id].selectRequest.connect(stateSelected)
+        root.statesDict[id].dataChanged.connect(stateUpdated)
+
         root.statesDict[id].drawingCanvas = drawingCanvas
     }
 
@@ -32,6 +36,11 @@ ApplicationWindow {
     function stateSelected(ID) {
         deselectAll()
         root.statesDict[ID].select()
+        iface.state_selected(ID)
+    }
+
+    function stateUpdated(id, name, timer) {
+        iface.update_state(id, name, timer)
     }
 
     function populateTransitions() {

@@ -20,12 +20,20 @@ class Interface(QObject):
     @pyqtSlot()
     def create_new_state(self):
         # create a new state in the model
-        state_name, state_id = self.state_model.create_state()
+        state_name, state_timer, state_id = self.state_model.create_state()
         print(state_name, state_id)
 
         # tell the GUI to initialize this state
-        self.root.stateCreated(state_name, state_id)
-        print("create new state")
+        self.root.stateCreated(state_name, state_timer, state_id)
+
+    @pyqtSlot(int, str, float)
+    def update_state(self, state_id, state_name, state_timer):
+        self.state_model.update_state(state_id, state_name, state_timer)
+        print("update state")
+
+    @pyqtSlot(int)
+    def state_selected(self, state_id):
+        print("state selected: ", self.state_model.states[state_id])
 
     @pyqtSlot(QVariant)
     def printer(self, obj):
@@ -39,19 +47,26 @@ class StateModel:
 
     def create_state(self):
         state_name = 'state' + str(self.state_id_counter)
+        state_timer = 1
         state_id = self.state_id_counter
 
-        self.states[state_id] = State(state_name, state_id)
+        self.states[state_id] = State(state_name, state_timer, state_id)
         self.state_id_counter += 1
 
-        return state_name, state_id
+        return state_name, state_timer, state_id
 
-    def update_states(self, states_obj):
-        print(states_obj['0'])
+    def update_state(self, state_id, state_name, state_timer):
+        self.states[state_id].name = state_name
+        self.states[state_id].timer = state_timer
+        print(self.states[state_id])
 
 
 class State:
-    def __init__(self, name, id):
+    def __init__(self, name, timer, id):
         self.name = name
         self.id = id
+        self.timer = timer
         self.transitions = list()
+
+    def __str__(self):
+        return 'State: (' + str(self.id) + ') ' + str(self.name) + '. Timer: ' + str(self.timer)

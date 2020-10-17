@@ -19,6 +19,8 @@ Rectangle {
 
     signal selectRequest(var ID)
 
+    signal dataChanged(var ID, var name, var timer)
+
     function select() {
         rectangle.border.color = "#979797"
         outNode.color = "#979797"
@@ -61,6 +63,10 @@ Rectangle {
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         font.family: "Courier"
+
+        onAccepted: {
+            rectangle.dataChanged(rectangle.stateID, stateNameTextInput.text, timerTextInput.text)
+        }
     }
 
     Rectangle {
@@ -108,6 +114,10 @@ Rectangle {
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         font.family: "Courier"
+
+        onAccepted: {
+            rectangle.dataChanged(rectangle.stateID, stateNameTextInput.text, timerTextInput.text)
+        }
     }
 }
 /*##^##
