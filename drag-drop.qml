@@ -150,20 +150,39 @@ ApplicationWindow {
                     ctx.reset()
                     ctx.lineWidth = 2
 
+                    // for all current states
                     for (var state in root.statesDict) {
                         // get the transitions for this state
                         var transitions = iface.get_transitions_qml(state)
 
+                        // for every transition
                         for (var transition in transitions) {
-                            iface.printer(transitions[transition])
+                            // get the source and sink state
+                            var sourceState = transitions[transition][0]
+                            var sinkState = transitions[transition][1]
+
+                            // draw a line between them
+                            ctx.beginPath()
+                            // Mapping is necessary here since node is child of element. Otherwise will not update position properly
+                            var outNodePoint = drawingCanvas.mapFromItem(root.statesDict[sourceState], root.statesDict[sourceState].outNodeX, root.statesDict[sourceState].outNodeY)
+                            var inNodePoint = drawingCanvas.mapFromItem(root.statesDict[sinkState], root.statesDict[sinkState].inNodeX, root.statesDict[sinkState].inNodeY)
+
+                            ctx.moveTo(outNodePoint.x, outNodePoint.y)
+                            ctx.lineTo(inNodePoint.x, inNodePoint.y)
+
+                            ctx.closePath()
+                            ctx.stroke()
                         }
 
-                        ctx.beginPath()
-                        ctx.moveTo(drawingCanvas.width/2, drawingCanvas.height/2)
-                        var nodePoint = drawingCanvas.mapFromItem(root.statesDict[state], root.statesDict[state].inNodeX, root.statesDict[state].inNodeY)
-                        ctx.lineTo(nodePoint.x, nodePoint.y)
-                        ctx.closePath()
-                        ctx.stroke()
+//                        ctx.beginPath()
+//                        ctx.moveTo(drawingCanvas.width/2, drawingCanvas.height/2)
+
+//                        // Mapping is necessary here since node is child of element. Otherwise will not update position properly
+//                        var nodePoint = drawingCanvas.mapFromItem(root.statesDict[state], root.statesDict[state].inNodeX, root.statesDict[state].inNodeY)
+
+//                        ctx.lineTo(nodePoint.x, nodePoint.y)
+//                        ctx.closePath()
+//                        ctx.stroke()
                     }
                 }
             }

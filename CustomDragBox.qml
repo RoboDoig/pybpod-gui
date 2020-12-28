@@ -18,6 +18,8 @@ Rectangle {
     property alias timerText: timerTextInput.text
     property real inNodeX: inNode.x
     property real inNodeY: inNode.y
+    property real outNodeX: outNode.x
+    property real outNodeY: outNode.y
 
     signal selectRequest(var ID)
 

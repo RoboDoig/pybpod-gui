@@ -68,11 +68,13 @@ class Interface(QObject):
         # List of tuples with first element = source state id, second element = sink state id.
         qml_transitions = list()
         for transition in self.state_model.states[state_id].transitions:
-            source_state_id = state_id
-            sink_state_id = self.get_state_id_by_name(transition[1])
+            source_state_id = int(state_id)
+            sink_state_id = int(self.get_state_id_by_name(transition[1]))
 
             if sink_state_id is not None:
-                qml_transitions.append((source_state_id, sink_state_id))
+                qml_transitions.append([source_state_id, sink_state_id])
+
+        # print(qml_transitions)
 
         return qml_transitions
 
