@@ -15,13 +15,12 @@ class Interface(QObject):
 
     @pyqtSlot(QVariant)
     def on_released(self, obj):
-        print(obj.property('x'), obj.property('y'))
+        temp = 1
 
     @pyqtSlot()
     def create_new_state(self):
         # create a new state in the model
         state_name, state_timer, state_id = self.state_model.create_state()
-        print(state_name, state_id)
 
         # tell the GUI to initialize this state
         self.root.stateCreated(state_name, state_timer, state_id)
@@ -33,6 +32,13 @@ class Interface(QObject):
     @pyqtSlot(int)
     def state_selected(self, state_id):
         self.show_transitions(state_id)
+
+    def get_state_id_by_name(self, state_name):
+        for state in self.state_model.states.keys():
+            if self.state_model.states[state].name == state_name:
+                return state
+
+        return None
 
     @pyqtSlot(int)
     def add_transition(self, state_id):
@@ -55,6 +61,20 @@ class Interface(QObject):
         self.root.clearTransitions()
         for t, transition in enumerate(self.state_model.states[state_id].transitions):
             self.root.addTransition(transition[0], transition[1], t)
+
+    @pyqtSlot(int, result=list)
+    def get_transitions_qml(self, state_id):
+        # Want to return a list of transitions for gui.
+        # List of tuples with first element = source state id, second element = sink state id.
+        qml_transitions = list()
+        for transition in self.state_model.states[state_id].transitions:
+            source_state_id = state_id
+            sink_state_id = self.get_state_id_by_name(transition[1])
+
+            if sink_state_id is not None:
+                qml_transitions.append((source_state_id, sink_state_id))
+
+        return qml_transitions
 
     @pyqtSlot(QVariant)
     def printer(self, obj):
@@ -79,11 +99,9 @@ class StateModel:
     def update_state(self, state_id, state_name, state_timer):
         self.states[state_id].name = state_name
         self.states[state_id].timer = state_timer
-        print(self.states[state_id])
 
     def add_transition(self, state_id):
         self.states[state_id].transitions.append(("Tup", "State"))
-        print("state transition added to: " + str(state_id))
 
 
 class State:

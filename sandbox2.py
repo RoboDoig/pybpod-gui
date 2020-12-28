@@ -1,7 +1,7 @@
-a = dict()
+state_dict = {'1': 'state1', '2': 'state2'}
 
-a[1] = 'a'
+n = 'state2'
 
-print(a)
-
-print("Class: " + str(1) + 'a')
+for state in state_dict.keys():
+    if state_dict[state] == n:
+        print(state)

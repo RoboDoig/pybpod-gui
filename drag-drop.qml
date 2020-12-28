@@ -48,7 +48,6 @@ ApplicationWindow {
 
     function clearTransitions() {
         for (var i = gridLayout1.children.length; i > 0; i--) {
-            iface.printer(i)
             gridLayout1.children[i-1].destroy()
         }
     }
@@ -147,13 +146,25 @@ ApplicationWindow {
                 anchors.fill: parent
                 onPaint:
                 {
-                    //            var ctx = drawingCanvas.getContext('2d')
-                    //            ctx.lineWidth = 2
-                    //            ctx.beginPath()
-                    //            ctx.moveTo(drawingCanvas.width/2, drawingCanvas.height/2)
-                    //            ctx.lineTo(mainMouseArea.mouseX, mainMouseArea.mouseY)
-                    //            //ctx.closePath()
-                    //            ctx.stroke()
+                    var ctx = drawingCanvas.getContext('2d')
+                    ctx.reset()
+                    ctx.lineWidth = 2
+
+                    for (var state in root.statesDict) {
+                        // get the transitions for this state
+                        var transitions = iface.get_transitions_qml(state)
+
+                        for (var transition in transitions) {
+                            iface.printer(transitions[transition])
+                        }
+
+                        ctx.beginPath()
+                        ctx.moveTo(drawingCanvas.width/2, drawingCanvas.height/2)
+                        var nodePoint = drawingCanvas.mapFromItem(root.statesDict[state], root.statesDict[state].inNodeX, root.statesDict[state].inNodeY)
+                        ctx.lineTo(nodePoint.x, nodePoint.y)
+                        ctx.closePath()
+                        ctx.stroke()
+                    }
                 }
             }
         }

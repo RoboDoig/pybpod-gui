@@ -16,6 +16,8 @@ Rectangle {
     property var drawingCanvas
     property alias stateNameText: stateNameTextInput.text
     property alias timerText: timerTextInput.text
+    property real inNodeX: inNode.x
+    property real inNodeY: inNode.y
 
     signal selectRequest(var ID)
 
@@ -41,6 +43,10 @@ Rectangle {
         propagateComposedEvents: true
         onClicked: {
             rectangle.selectRequest(rectangle.stateID)
+            drawingCanvas.requestPaint()
+        }
+        onPositionChanged: {
+            drawingCanvas.requestPaint()
         }
     }
 
@@ -81,27 +87,18 @@ Rectangle {
             id: outNodeMouseArea
             anchors.fill: parent
             hoverEnabled: true
-            onClicked: {
-//                drawingCanvas.requestPaint()
-
-//                if (outNode.selected) {
-//                    outNode.color = "#000000"
-//                    outNode.selected = false
-//                } else {
-//                    outNode.color = "#ff0000"
-                //                    outNode.selected = true
-                //                }
-            }
         }
     }
 
     Rectangle {
         id: inNode
-        x: -5
-        y: 46
         width: 9
         height: 9
         color: "#000000"
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.verticalCenterOffset: 1
+        anchors.leftMargin: -5
     }
 
     TextInput {
@@ -122,6 +119,6 @@ Rectangle {
 }
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:3}
+    D{i:0;formeditorZoom:3}D{i:6}
 }
 ##^##*/
