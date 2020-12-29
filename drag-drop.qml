@@ -173,16 +173,6 @@ ApplicationWindow {
                             ctx.closePath()
                             ctx.stroke()
                         }
-
-//                        ctx.beginPath()
-//                        ctx.moveTo(drawingCanvas.width/2, drawingCanvas.height/2)
-
-//                        // Mapping is necessary here since node is child of element. Otherwise will not update position properly
-//                        var nodePoint = drawingCanvas.mapFromItem(root.statesDict[state], root.statesDict[state].inNodeX, root.statesDict[state].inNodeY)
-
-//                        ctx.lineTo(nodePoint.x, nodePoint.y)
-//                        ctx.closePath()
-//                        ctx.stroke()
                     }
                 }
             }

@@ -74,8 +74,6 @@ class Interface(QObject):
             if sink_state_id is not None:
                 qml_transitions.append([source_state_id, sink_state_id])
 
-        # print(qml_transitions)
-
         return qml_transitions
 
     @pyqtSlot(QVariant)
@@ -115,3 +113,15 @@ class State:
 
     def __str__(self):
         return 'State: (' + str(self.id) + ') ' + str(self.name) + '. Timer: ' + str(self.timer)
+
+
+class StateRunManager:
+    def __init__(self, state_model):
+        self.state_model = state_model
+
+    def run(self):
+        print('run started')
+
+    def stop(self):
+        print('stop')
+
